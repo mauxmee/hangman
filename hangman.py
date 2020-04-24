@@ -40,15 +40,15 @@ def get_grade():
   """ get user input grade for the wordlist"""
   while True:
     grade = input(
-        'What level do you want? [2-6] ')
+        'What level do you want? [2-7] ')
     try:
       grade = int(grade)
-      if 2 <= grade <= 6:
+      if 2 <= grade <= 7:
         return grade
       else:
-        print('{0} is not between 2 and 6'.format(grade))
+        print('{0} is not between 2 and 7'.format(grade))
     except ValueError:
-      print('{0} is not an integer between 2 and 6'.format(grade))
+      print('{0} is not an integer between 2 and 7'.format(grade))
 
 
 def get_min_word_length():
