@@ -1,160 +1,147 @@
-from string import ascii_lowercase
 import random
+from PyDictionary import PyDictionary
+import json
+import re
+import pprint
 
+dictionary = PyDictionary()
 
-def get_random_word(min_word_length, grade):
-  """Get a random word from the wordlist using no extra memory."""
-  num_words_processed = 0
-  curr_word = None
-  WORDLIST = "wordlist_" + str(grade) + ".txt"
-  with open(WORDLIST, 'r') as f:
-    for word in f:
-      if '(' in word or ')' in word:
-        continue
-      word = word.strip().lower()
-      if len(word) < min_word_length:
-        continue
-      num_words_processed += 1
-      if random.randint(1, num_words_processed) == 1:
-        curr_word = word
-  return curr_word
+def print_explaination(word):
+    print(word + " dictionary meaning:")
+    explain = pprint.pformat(dictionary.meaning(word), indent=1, compact=False)
+    explain_nice = re.sub('[^a-zA-Z0-9:\,() \n\.]', '', explain)
+    print(explain_nice)
 
+def get_try_count():
+    while True:
+        tries = input("How many incorrect attemps do you want? [1-25] ")
+        try:
+            triesValue = int(tries)
+            
+            if triesValue in range(1,26):
+               return triesValue
+            else:
+                print(tries+ " is not a number between 1 and 25, do your maths boi!?")
+        except ValueError:
+             print("your input isn't a number.")
+    
 
-def get_num_attempts():
-  """Get user-inputted number of incorrect attempts for the game."""
-  while True:
-    num_attempts = input(
-        'How many incorrect attempts do you want? [1-25] ')
+def get_level():
+    while True:
+        print("word Level 2-6 come from Wordly Wise 3000 Year 2-6")
+        print("word level 7 comes from 504 Absolutely Essential Words")
+        level = input("What level word do you want? [2-7] ")
+        try:
+            levelValues = int(level)
+            
+            if levelValues in range(2,8):
+               return levelValues
+            else:
+                print(level+ " is not a number between 2 and 7, do your maths boi!?")
+        except ValueError:
+            print("your input isn't a number.")
+            
+def get_minlen():
+    while True:
+        minlen = input("What minimum word length do yo want? [4-10] ")
+        try:
+            minlenValues = int(minlen)
+            
+            if minlenValues in range(4,11):
+               return minlenValues
+            else:
+                print(minlen+ " is not a number between 4 and 10, do your maths boi!?")
+        except ValueError:
+            print("your input isn't a number.")
+            
+ 
+def get_random_word(level, minlen):
+    words= []
+    filename = "wordlist_" + str(level) + ".txt"
     try:
-      num_attempts = int(num_attempts)
-      if 1 <= num_attempts <= 25:
-        return num_attempts
-      else:
-        print('{0} is not between 1 and 25'.format(num_attempts))
-    except ValueError:
-      print('{0} is not an integer between 1 and 25'.format(
-          num_attempts))
+        file = open(filename, 'r')
+        for line in file:
+            word = line.strip().lower()
+            if len(word) >= minlen:
+                words.append(word)
+        lenArray = len(words)
+        randomIndex = random.randint(0, len(words))
+        return words[randomIndex]
+    except IOError:
+        print("can't find the file " + filename)
+        return "blahahahah"
 
+def display_info(word, tries):
+    validLetters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
+    incorrect_guesses = []
+    correct_guesses = ''
+    wordLen = len(word)
+    guessFlags = [False] *wordLen
+    ret = False
+    while True:
+        maskedWord = []
+        for i in range(0,wordLen):
+            if guessFlags[i] == False:
+                maskedWord +='*'
+            else:
+                maskedWord += word[i]
+        displayWord = ''.join(maskedWord)
+        print("\nWord: " + displayWord)
+        print("Attempts remaining: " + str(tries))
+        if len(incorrect_guesses) > 0:
+            print("Previous incorrect guesses: " + ' '.join(incorrect_guesses))
+        guess = input("Choose the next letter: ")
+        if len(guess) > 1:
+            print("must be single letter. try again")
+            continue
+        elif guess not in validLetters:
+            print("must be a valid letter. try again")
+            continue
+        elif guess not in word:
+            if (guess in incorrect_guesses):
+                print("you already guessed it. try again")
+                continue
+            else:
+                incorrect_guesses.append(guess)
+                tries -= 1
+                if tries == 0:
+                    print('Too bad. You lost! the word was: ' + word)
+                    print_explaination(word)
+                    tryAgain = input("Try again?[y/Y]")
+                    if tryAgain.lower() == 'y':
+                       ret = True
+                    break
+                else:
+                    continue
+        else:
+            count = 0
+            for i in range(0,wordLen):
+                if word[i] == guess:
+                    guessFlags[i] = True
+                if guessFlags[i] == True:
+                    count += 1
+            if count == wordLen:
+                print('Congratulation! you won! the word was: ' + word)
+                print_explaination(word)
+                tryAgain = input("Try 1again?[y/Y]")
+                print()
+                if tryAgain.lower() == 'y':
+                    ret = True
+                break
+    return  ret              
+          
+def hangman():
+    print("Welcome to hangman game, made by ME")
 
-def get_grade():
-  """ get user input grade for the wordlist"""
-  while True:
-    grade = input(
-        'What level do you want? [2-7] ')
-    try:
-      grade = int(grade)
-      if 2 <= grade <= 7:
-        return grade
-      else:
-        print('{0} is not between 2 and 7'.format(grade))
-    except ValueError:
-      print('{0} is not an integer between 2 and 7'.format(grade))
-
-
-def get_min_word_length():
-  """Get user-inputted minimum word length for the game."""
-  while True:
-    min_word_length = input(
-        'What minimum word length do you want? [4-16] ')
-    try:
-      min_word_length = int(min_word_length)
-      if 4 <= min_word_length <= 16:
-        return min_word_length
-      else:
-        print('{0} is not between 4 and 16'.format(min_word_length))
-    except ValueError:
-      print('{0} is not an integer between 4 and 16'.format(min_word_length))
-
-
-def get_display_word(word, idxs):
-  """Get the word suitable for display."""
-  if len(word) != len(idxs):
-    raise ValueError('Word length and indices length are not the same')
-  displayed_word = ''.join(
-      [letter if idxs[i] else '*' for i, letter in enumerate(word)])
-  return displayed_word.strip()
-
-
-def get_next_letter(remaining_letters):
-  """Get the user-inputted next letter."""
-  if len(remaining_letters) == 0:
-    raise ValueError('There are no remaining letters')
-  while True:
-    next_letter = input('Choose the next letter: ').lower()
-    if len(next_letter) != 1:
-      print('{0} is not a single character'.format(next_letter))
-    elif next_letter not in ascii_lowercase:
-      print('{0} is not a letter'.format(next_letter))
-    elif next_letter not in remaining_letters:
-      print('{0} has been guessed before'.format(next_letter))
-    else:
-      remaining_letters.remove(next_letter)
-      return next_letter
-
-
-def play_hangman():
-  """Play a game of hangman.
-  At the end of the game, returns if the player wants to retry.     """
-  """Let player specify difficulty  """
-  print('Starting a game of Hangman...')
-  attempts_remaining = get_num_attempts()
-  min_word_length = get_min_word_length()
-  grade = get_grade()
-  # Randomly select a word
-  print('Selecting a word...')
-  word = get_random_word(min_word_length, grade)
-  print()
-  # Initialize game state variables
-  idxs = [letter not in ascii_lowercase for letter in word]
-  remaining_letters = set(ascii_lowercase)
-  wrong_letters = []
-  word_solved = False
-  # Main game loop
-  while attempts_remaining > 0 and not word_solved:
-    # Print current game state
-    print('Word: {0}'.format(get_display_word(word, idxs)))
-    print('Attempts Remaining: {0}'.format(attempts_remaining))
-    print('Previous Guesses: {0}'.format(' '.join(wrong_letters)))
-
-    # Get player's next letter guess
-    next_letter = get_next_letter(remaining_letters)
-
-    # Check if letter guess is in word
-    if next_letter in word:
-      # Guessed correctly
-      print('{0} is in the word!'.format(next_letter))
-
-      # Reveal matching letters
-      for i in range(len(word)):
-        if word[i] == next_letter:
-          idxs[i] = True
-    else:
-      # Guessed incorrectly
-      print('{0} is NOT in the word!'.format(next_letter))
-
-      # Decrement num of attempts left and append guess to wrong guesses
-      attempts_remaining -= 1
-      wrong_letters.append(next_letter)
-
-    # Check if word is completely solved
-    if False not in idxs:
-      word_solved = True
-    print()
-
-  # The game is over: reveal the word
-  print('The word is {0}'.format(word))
-
-  # Notify player of victory or defeat
-  if word_solved:
-    print('Congratulations! You won!')
-  else:
-    print('Try again next time!')
-
-  # Ask player if he/she wants to try again
-  try_again = input('Would you like to try again? [y/Y] ')
-  return try_again.lower() == 'y'
-
-
-if __name__ == '__main__':
-  while play_hangman():
-    print()
+    while True:
+        tries = get_try_count()
+        level = get_level()
+        minlen = get_minlen()
+        word = get_random_word(level, minlen)
+        try_Again = display_info(word, tries)
+        if try_Again == False:
+            break
+    
+        
+if __name__ == "__main__":
+    hangman()
