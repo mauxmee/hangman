@@ -7,11 +7,18 @@ import pprint
 dictionary = PyDictionary()
 
 def print_explaination(word):
-    print(word + " dictionary meaning:")
-    explain = pprint.pformat(dictionary.meaning(word), indent=1, compact=False)
-    explain_nice = re.sub('[^a-zA-Z0-9:\,() \n\.]', '', explain)
-    print(explain_nice)
+    print(word + ":")
 
+    meaning = pprint.pformat(dictionary.meaning(word), indent=1, compact=False)
+    meaning_nice = re.sub(" '", '', meaning)
+    meaning_nice = re.sub('[^a-zA-Z0-9:\,() \n\.]', '', meaning_nice)
+    print(meaning_nice)
+
+    syn = dictionary.getSynonyms(word)
+    if len(syn) > 0:
+        print ("Synonyms: " + ''.join(syn))
+    print()
+    
 def get_try_count():
     while True:
         tries = input("How many incorrect attemps do you want? [1-25] ")
@@ -25,11 +32,13 @@ def get_try_count():
         except ValueError:
              print("your input isn't a number.")
     
-
 def get_level():
+    first = True
     while True:
-        print("word Level 2-6 come from Wordly Wise 3000 Year 2-6")
-        print("word level 7 comes from 504 Absolutely Essential Words")
+        if first == True:
+            print("word Level 2-6 come from Wordly Wise 3000 Year 2-6")
+            print("word level 7 comes from 504 Absolutely Essential Words")
+            first = False
         level = input("What level word do you want? [2-7] ")
         try:
             levelValues = int(level)
@@ -54,7 +63,6 @@ def get_minlen():
         except ValueError:
             print("your input isn't a number.")
             
- 
 def get_random_word(level, minlen):
     words= []
     filename = "wordlist_" + str(level) + ".txt"
@@ -121,9 +129,9 @@ def display_info(word, tries):
                 if guessFlags[i] == True:
                     count += 1
             if count == wordLen:
-                print('Congratulation! you won! the word was: ' + word)
+                print('Congratulation, you won! The word was: ' + word)
                 print_explaination(word)
-                tryAgain = input("Try 1again?[y/Y]")
+                tryAgain = input("Try again?[y/Y]")
                 print()
                 if tryAgain.lower() == 'y':
                     ret = True
@@ -142,6 +150,5 @@ def hangman():
         if try_Again == False:
             break
     
-        
 if __name__ == "__main__":
     hangman()
