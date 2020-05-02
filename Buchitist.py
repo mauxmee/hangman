@@ -1,9 +1,11 @@
 import random
 
+
 def explainRules():
     explain = input('Do you know how to play this game? [y/n]')
     if explain.lower() == 'n':
         print("how to play: enter either t, c, s, or b which stands for tiger, chicken, stick and bug. the tiger eats the chicken, the chicken eats the bug, the bug eats the stick and the stick hits the tiger. you will play against a computer but it isn't impossible to win.")
+
 
 def getRounds():
     while True:
@@ -16,6 +18,7 @@ def getRounds():
                 print(rounds + " is not a number between 1 and 10, do your maths boi!?")
         except ValueError:
             print("your input isn't a number.")
+
 
 def getPlayerChoice():
     validLetters = ['t', 'c', 's', 'b']
@@ -30,8 +33,9 @@ def getPlayerChoice():
         else:
             return choice
 
+
 def getGameResult(name, player, pc):
-    # return -1 if player lose, 0 if not compatible, 1 if player win
+    # return -1 if player win, 0 if not compatible, 1 if PC win
     boardNames = {1: 'Stick', 2: 'Tiger', 3: 'Chicken',  4: 'Bug'}
     playerChoice = boardNames.get(player)
     pcChoice = boardNames.get(pc)
@@ -53,6 +57,7 @@ def getGameResult(name, player, pc):
     return 0
     # print lose / NC / win result to player
 
+
 def Buchitist():
     board = {'s': 1, 't': 2, 'c': 3, 'b': 4}
     explainRules()
@@ -63,11 +68,12 @@ def Buchitist():
         rounds = getRounds()
 
         while (pcWin < rounds and playerWin < rounds):
+            # get random pc value from 1 to 4
+            pcChoiceValue = random.randint(1, 4)
+            
             playerChoice = getPlayerChoice()
             playerChoiceValue = board.get(playerChoice, None)
 
-            # get random pc value from 1 to 4
-            pcChoiceValue = random.randint(1, 4)
             result = getGameResult(
                 playerName, playerChoiceValue, pcChoiceValue)
             if result == 1:
@@ -84,6 +90,7 @@ def Buchitist():
         tryAgain = input("Game over. Do you want to play again? [y/Y]")
         if tryAgain.lower() != 'y':
             break
+
 
 if __name__ == "__main__":
     Buchitist()
