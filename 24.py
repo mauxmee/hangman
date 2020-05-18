@@ -1,11 +1,12 @@
 import random
 import re
+import time
 
 
 def get_rules():
     rules = input("Do you know how to play the game 24? [y/Y] ")
     if rules.lower() != 'y':
-        print("In 24, there are four numbers from 1 through to 13.\n"+
+        print("In 24, there are four numbers from 1 through to 13.\n" +
               "You need to try and get the number 24 using all of the numbers.\n" +
               "You can only add, subtract, multiply or divide.\n" +
               "Not all of the number groups can form 24, so you can press N for a new game.\n" +
@@ -42,6 +43,7 @@ def doMath(n1, n2, op):
 
 def getNewTarget(n1, n2, r, numbers):
     temp = []
+    temp.append(r)
     found1 = -1
     for i in range(0, len(numbers)):
         if n1 == numbers[i]:
@@ -59,7 +61,6 @@ def getNewTarget(n1, n2, r, numbers):
         if(i != found1 and i != found2):
             temp.append(numbers[i])
 
-    temp.append(r)
     return temp
 
 
@@ -81,8 +82,16 @@ def exist(n1, n2, numbers):
             break
     return found2 != -1
 
-def printStat(guessRight, totalGuess,streak):
-    print("Correct/Total: " + str(guessRight) + "/" + str(totalGuess) + " Streak: " + str(streak))
+
+def printStat(guessRight, totalGuess, streak, start):
+    print("Correct/Total: " + str(guessRight) + "/" +
+          str(totalGuess) + " Streak: " + str(streak))
+    duration = int(time.time() - start)
+    min = int(duration / 60)
+    sec = int(duration % 60)
+    print("Duration: " + 
+          ("" if min == 0 else str(min) + " minutes ") +
+          ("" if sec == 0 else str(sec) + " seconds"))
 
 
 def play24():
@@ -93,8 +102,10 @@ def play24():
     newGame = True
     numbers = []
     regenerate = False
+    gameStart = time.time()
     while newGame == True:
         result = 0
+        start = time.time()
         if len(numbers) == 0 or regenerate == True:
             numbers = getNewNumbers()
         target = numbers
@@ -104,7 +115,7 @@ def play24():
             userInput = input("\n--------------- #" + str(totalGuess+1)+" ---------------" +
                               "\nThe numbers are: " + " ".join(map(str, target)) +
                               ".\nEnter R(redo), N(New game), Q(quit)\n" +
-                              "Or +-*/ with two numbers:").lower()
+                              "Or + - * / with two numbers:").lower()
             if userInput == 'q':
                 newGame = False
                 skip = True
@@ -115,7 +126,7 @@ def play24():
                 regenerate = True
                 totalGuess += 1
                 streak = 0
-                printStat(guessRight, totalGuess,streak)
+                printStat(guessRight, totalGuess, streak, start)
                 break
 
             elif userInput == 'r':
@@ -133,17 +144,17 @@ def play24():
                     if exist(n1, n2, target):
                         r = doMath(n1, n2, op)
                         if r == -1:
-                            print("Incorrect math. try again")
+                            print(userInput + ": incorrect math. please try again")
                             continue
                         result = r
                         target = getNewTarget(n1, n2, r, target)
                         continue
                     else:
-                        print("Both numbers must exist in the list above. try again")
+                        print(userInput + ":invalid input. Both numbers must exist in the list above. please try again")
                         continue
 
                 else:
-                    print("invalid input")
+                    print(userInput + ":invalid input. Both numbers must exist in the list above. please try again")
                     continue
 
         if skip == False:
@@ -156,15 +167,11 @@ def play24():
                 print("congratulations. you won!")
                 guessRight += 1
                 streak += 1
-            printStat(guessRight, totalGuess,streak)
-
-            if input("\nPress Q to quit or Enter for new game.").lower() == 'q':
-                newGame = False
-            else:
-                regenerate = True
+            printStat(guessRight, totalGuess, streak, start)
+            regenerate = True
 
     # print out statistics
-    printStat(guessRight, totalGuess,streak)
+    printStat(guessRight, totalGuess, streak, gameStart)
 
 
 if __name__ == "__main__":
