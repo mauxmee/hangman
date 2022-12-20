@@ -6,7 +6,6 @@ import pprint
 
 dictionary = PyDictionary()
 
-
 def print_explanation(word):
     print(word + ":")
 
@@ -77,18 +76,16 @@ def get_random_word(level, minlen):
             word = line.strip().lower()
             if len(word) >= minlen:
                 words.append(word)
-        lenArray = len(words)
         randomIndex = random.randint(0, len(words))
         return words[randomIndex]
     except IOError:
         print("can't find the file " + filename)
-        return "blahahahah"
+        return None
 
 
 def display_info(word, tries):
     validLetters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
     incorrect_guesses = []
-    correct_guesses = ''
     wordLen = len(word)
     guessFlags = [False] * wordLen
     ret = False
@@ -153,6 +150,8 @@ def hangman():
         level = get_level()
         minlen = get_minlen()
         word = get_random_word(level, minlen)
+        if word is None:
+            break
         try_Again = display_info(word, tries)
         if try_Again == False:
             break
