@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import random
 from PyDictionary import PyDictionary
-import json
 import re
 import pprint
 
@@ -24,7 +23,7 @@ def print_explanation(word):
 
 def get_try_count():
     while True:
-        tries = input("How many incorrect attemps do you want? [1-25] ")
+        tries = input("How many incorrect attempts do you want? [1-25] ")
         try:
             triesValue = int(tries)
 
