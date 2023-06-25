@@ -6,6 +6,8 @@ import pprint
 
 dictionary = PyDictionary()
 
+INVALID_NUMBER = "your input isn't a number."
+
 def print_explanation(word):
     print(word + ":")
 
@@ -31,7 +33,7 @@ def get_try_count():
             else:
                 print(tries + " is not a number between 1 and 25, do your maths boi!?")
         except ValueError:
-            print("your input isn't a number.")
+            print(INVALID_NUMBER)
 
 
 def get_level():
@@ -50,7 +52,7 @@ def get_level():
             else:
                 print(level + " is not a number between 2 and 7, do your maths boi!?")
         except ValueError:
-            print("your input isn't a number.")
+            print(INVALID_NUMBER)
 
 
 def get_minlen():
@@ -64,15 +66,15 @@ def get_minlen():
             else:
                 print(minlen + " is not a number between 4 and 10, do your maths boi!?")
         except ValueError:
-            print("your input isn't a number.")
+            print(INVALID_NUMBER)
 
 
 def get_random_word(level, minlen):
     words = []
     filename = "wordlist_" + str(level) + ".txt"
     try:
-        file = open(filename, 'r')
-        for line in file:
+        inputFile = open(filename, 'r')
+        for line in inputFile:
             word = line.strip().lower()
             if len(word) >= minlen:
                 words.append(word)
@@ -104,14 +106,12 @@ def display_info(word, tries):
         guess = input("Choose the next letter: ")
         if len(guess) > 1:
             print("must be single letter. try again")
-            continue
+            
         elif guess not in validLetters:
             print("must be a valid letter. try again")
-            continue
         elif guess not in word:
             if (guess in incorrect_guesses):
                 print("you already guessed it. try again")
-                continue
             else:
                 incorrect_guesses.append(guess)
                 tries -= 1

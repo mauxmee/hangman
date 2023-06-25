@@ -29,7 +29,6 @@ def getPlayerChoice():
 
         if len(choice) > 1 or choice not in validLetters:
             print("Must be one of the following: [t/c/s/b]. try again. ")
-            continue
         else:
             return choice
 

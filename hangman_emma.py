@@ -50,7 +50,6 @@ def get_random_word(level, minlen):
             word = line.strip().lower()
             if len(word) >= minlen:
                 words.append(word)
-        lenArray = len(words)
         randomIndex = random.randint(0, len(words))
         return words[randomIndex]
     except IOError:
@@ -60,7 +59,6 @@ def get_random_word(level, minlen):
 def display_info(word, tries):
     validLetters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
     incorrect_guesses = []
-    correct_guesses = ''
     wordLen = len(word)
     guessFlags = [False] *wordLen
     ret = False
@@ -78,14 +76,11 @@ def display_info(word, tries):
         guess = input("Choose the next letter: ")
         if len(guess) > 1:
             print("must be single letter. try again")
-            continue
         elif guess not in validLetters:
             print("must be a valid letter. try again")
-            continue
         elif guess not in word:
             if (guess in incorrect_guesses):
                 print("you already guessed it. try again")
-                continue
             else:
                 incorrect_guesses.append(guess)
                 tries -= 1
