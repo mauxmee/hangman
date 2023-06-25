@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 import random
 def get_try_count():
     while True:
-        tries = input("How many incorrect attemps do yo want? [1-25] ")
+        tries = input("How many incorrect attempts do yo want? [1-25] ")
         try:
             triesValue = int(tries)
             
