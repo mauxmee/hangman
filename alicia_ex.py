@@ -63,14 +63,84 @@
 # final_amount = "{:.2f}".format(bill_per_person)
 # print(f"Each person should pay ${final_amount}")
 
-print("Welcome to the rollercoaster!")
-height = int(input("What is your height in cm? "))
+# print("Welcome to the rollercoaster!")
+# height = int(input("What is your height in cm? "))
 
-if height >= 120:
-    print("You can ride the rollercoaster!")
-    age = int(input("What is your age? "))
-    if age < 1
-    if age <= 18:
-        print("Please pay $7.")
+# if height >= 120:
+#     print("Great! You can ride the rollercoaster!")
+#     age = int(input("What is your age? "))
+#     if age < 12:
+#         bill = 5
+#         print("Child tickets are $5. ")
+#     elif age <= 18:
+#         bill = 7
+#         print("Youth tickets are $7. ")
+#     elif age >= 45 and age <= 55:
+#         print("Everything is going to be ok. Have a free ride on us!")
+#     else:
+#         bill = 12
+#         print("Adult tickets are $12. ")
+
+# wants_photo = input("Do you want a photo taken? Y or N")
+# if wants_photo == "Y":
+#     bill += 3
+
+# print(f"Your final bill is ${bill}!")
+
+# LOVE CALCULATOR
+
+# print("Welcome to the Love Calculator!")
+# name1 = input("What is your name? \n")
+# name2 = input("What is their name? \n")
+
+# combined_string = name1 + name2
+# lowercase_string = combined_string.lower()
+
+# t = lowercase_string.count("t")
+# r = lowercase_string.count("r")
+# u = lowercase_string.count("u")
+# e = lowercase_string.count("e")
+
+# true = t + r + u + e
+
+# l = lowercase_string.count("l")
+# o = lowercase_string.count("o")
+# v = lowercase_string.count("v")
+# e = lowercase_string.count("e")
+
+# love = l + o + v + e
+
+# love_score = int(str(true) + str(love))
+
+
+# if (love_score < 10) or (love_score > 90):
+#     print(f"Your love score is {love_score}, you go together like coke and mentos!")
+
+# elif (love_score >= 40) and (love_score <= 50):
+#     print(f"Your love score is {love_score}, you are alright together.")
+
+# else:
+#     print(f"Your score is {love_score}.")
+
+# Treasure HUNT
+
+print("Welcome to Treasure Island")
+print("Your mission is to find the treasure.")
+Q1 = input('There is an intersection that you must cross, as one of the obstacles to get to the    treasure, "left" or "right". You can\'t see the other side of both sides. Which         direction  would you choose?  \n').lower()
+
+if Q1 == "left":
+    Q2 = input('You\'ve come to a lake. there is an island n the middle of the lake. Type "wait" to waitfor a boat. Type "swim" to swim across.\n').lower()
+    if Q2 == "wait":
+        Q3 = input("You arrive at the island unharmed. There is a house with 3 doors. One red, one yellow, and one blue. Which color do you choose?\n").lower()
+        if Q3 == "red":
+            print("It's a room that is engulfed in flames. Game Over.")
+        elif Q3 == "yellow":
+            print("You found the room that is full of treasure! You Win!")
+        elif Q3 == "blue":
+            print("You enter a room of beasts. Game Over.")
+        else:
+            print("You chose a door that doesn't exist. Game Over.")
     else:
-        print("Please pay $12.")
+        print("You got attacked by an angry trout. Game Over.")
+else:
+    print("You tripped into a hole and is stuck. Game Over.")
